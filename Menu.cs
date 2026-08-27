@@ -23,12 +23,27 @@ namespace ArticuosCRUD
                 Console.WriteLine("3. Buscar");
                 Console.WriteLine("4. Modificar");
                 Console.WriteLine("5. Eliminar");
-                Console.WriteLine("6. Salir");
+                Console.WriteLine("0. Salir");
                 string opcion = Console.ReadLine() ?? "";
                 switch(opcion)
                 {
                     case "0":
                         continuar = false;
+                        break;
+                    case "1":
+                        MostrarAgregar();
+                        break;
+                    case "2":
+                        MostrarListar();
+                        break;
+                    case "3":
+                        MostrarBuscar();
+                        break;
+                    case "4":
+                        MostrarModificar();
+                        break;
+                    case "5":
+                        MostrarEliminar();
                         break;
                     default:
                         Console.WriteLine("Opcion Invalida");
@@ -36,6 +51,36 @@ namespace ArticuosCRUD
                         break;
                 }
             }
+        }
+        public void MostrarAgregar()
+        {
+            Console.Clear();
+            Console.WriteLine("Opcion Agregar Seleccionada");
+            Console.ReadLine();
+        }
+        public void MostrarListar()
+        {
+            Console.Clear();
+            Console.WriteLine("Opcion Listar Seleccionada");
+            Console.ReadLine();
+        }
+        public void MostrarBuscar()
+        {
+            Console.Clear();
+            Console.WriteLine("Opcion Buscar Seleccionada");
+            Console.ReadLine();
+        }
+        public void MostrarModificar()
+        {
+            Console.Clear();
+            Console.WriteLine("Opcion Modificar Seleccionada");
+            Console.ReadLine();
+        }
+        public void MostrarEliminar()
+        {
+            Console.Clear();
+            Console.WriteLine("Opcion Eliminar Seleccionada");
+            Console.ReadLine();
         }
     }
 }
