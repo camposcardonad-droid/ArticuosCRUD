@@ -8,10 +8,12 @@ namespace ArticuosCRUD
     {
         private readonly string Titulo;
         private readonly string[] Opciones;
+        private List<Producto> ListaProductos;
         public Menu(string titulo, string[] opciones)
         {
             Titulo = titulo;
             Opciones = opciones;
+            ListaProductos = new List<Producto>();
         }
         public void MostrarMenu()
         {
@@ -23,7 +25,7 @@ namespace ArticuosCRUD
                 Console.WriteLine(new string('#', Titulo.Length));
                 for (int i = 0; i < Opciones.Length; i++)
                 {
-                    Console.WriteLine($"{i + 1}, {Opciones[i]}");
+                    Console.WriteLine($"{i + 1}. {Opciones[i]}");
                 }
                 Console.WriteLine("0. Salir");
                 //Console.WriteLine("Gestor de Articulos");
@@ -65,13 +67,29 @@ namespace ArticuosCRUD
         public void MostrarAgregar()
         {
             Console.Clear();
-            Console.WriteLine("Opcion Agregar Seleccionada");
+            Console.WriteLine("Agregar Producto");
+            Console.WriteLine("================");
+            Console.WriteLine();
+            Console.Write("Nombre: ");
+            string nombre = Console.ReadLine();
+            Console.Write("Precio: ");
+            decimal precio = (decimal.TryParse(Console.ReadLine(), out decimal valor))? valor:0;
+            Console.Write("Cantidad: ");
+            int cantidad = (int.TryParse(Console.ReadLine(), out int valor1)) ? valor1 : 0;
+            Producto producto = new Producto(ListaProductos.Count(), nombre, cantidad, precio);
+            ListaProductos.Add(producto);
+            Console.WriteLine("Producto creado correctamente");
             Console.ReadLine();
         }
         public void MostrarListar()
         {
             Console.Clear();
-            Console.WriteLine("Opcion Listar Seleccionada");
+            Console.WriteLine("Listar Productos");
+            Console.WriteLine("================");
+            foreach (Producto item in ListaProductos)
+            {
+                Console.WriteLine(item.Nombre);
+            }
             Console.ReadLine();
         }
         public void MostrarBuscar()
