@@ -9,11 +9,12 @@ namespace ArticuosCRUD
         private readonly string Titulo;
         private readonly string[] Opciones;
         private List<Producto> ListaProductos;
+        public ManejadorArticulos Manejador { get; set; }
         public Menu(string titulo, string[] opciones)
         {
             Titulo = titulo;
             Opciones = opciones;
-            ListaProductos = new List<Producto>();
+            Manejador = new ManejadorArticulos();
         }
         public void MostrarMenu()
         {
@@ -52,9 +53,12 @@ namespace ArticuosCRUD
                         MostrarBuscar();
                         break;
                     case "4":
-                        MostrarModificar();
+                        MostrarBuscarNombre();
                         break;
                     case "5":
+                        MostrarModificar();
+                        break;
+                    case "6":
                         MostrarEliminar();
                         break;
                     default:
@@ -76,8 +80,7 @@ namespace ArticuosCRUD
             decimal precio = (decimal.TryParse(Console.ReadLine(), out decimal valor))? valor:0;
             Console.Write("Cantidad: ");
             int cantidad = (int.TryParse(Console.ReadLine(), out int valor1)) ? valor1 : 0;
-            Producto producto = new Producto(ListaProductos.Count(), nombre, cantidad, precio);
-            ListaProductos.Add(producto);
+            Manejador.AgregarProducto(nombre, cantidad, precio);
             Console.WriteLine("Producto creado correctamente");
             Console.ReadLine();
         }
@@ -86,28 +89,106 @@ namespace ArticuosCRUD
             Console.Clear();
             Console.WriteLine("Listar Productos");
             Console.WriteLine("================");
-            foreach (Producto item in ListaProductos)
-            {
-                Console.WriteLine(item.Nombre);
-            }
+            Manejador.ListarProductos();
             Console.ReadLine();
         }
         public void MostrarBuscar()
         {
+            int id;
             Console.Clear();
-            Console.WriteLine("Opcion Buscar Seleccionada");
+            Console.WriteLine("Buscar Producto por ID");
+            Console.WriteLine("======================");
+            id = PedirValorentero("ID");
+            Producto resultado = Manejador.BuscarptoductoPorId(id);
+            if (resultado != null)
+            {
+                Console.WriteLine(resultado.ToString());
+            }
+            else
+            {
+                Console.WriteLine("Producto no encontrado");
+            }
+            Console.ReadLine();
+        }
+        public int PedirValorentero(string titulo)
+        {
+            while (true)
+            {
+                Console.WriteLine($"{titulo}: ");
+                if(int.TryParse(Console.ReadLine(), out int valor))
+                {
+                    return valor;
+                }
+                else
+                {
+                    Console.WriteLine("valor no valido. Ingresa nuevamente");
+                    Console.ReadLine();
+                    Console.Clear();
+                }
+            }
+            
+        }
+        public void MostrarBuscarNombre()
+        {
+            Console.Clear();
+            Console.WriteLine("buscar por Nombre");
+            Console.WriteLine("================");
+            Console.WriteLine();
+            Console.Write("Nombre: ");
+            string nombre = Console.ReadLine();
+            foreach (Producto item in Manejador.BuscarProductosPorNombre(nombre))
+            {
+                Console.WriteLine(item.ToString());
+            }
             Console.ReadLine();
         }
         public void MostrarModificar()
         {
             Console.Clear();
-            Console.WriteLine("Opcion Modificar Seleccionada");
+            Console.WriteLine("Modificar Producto");
+            Console.WriteLine("=============================");
+            Console.WriteLine();
+            int id = PedirValorentero("ID de producto");
+            Producto? producto = Manejador.BuscarptoductoPorId(id);
+            if (producto is null)
+            {
+                Console.WriteLine("Producto no encontrado");
+                return;
+            }
+            Console.WriteLine(producto.ToString());
+            Console.WriteLine("Ingrese los datos nuevos");
+            Console.Write("Nombre: ");
+            string nombre = Console.ReadLine();
+            Console.Write("Precio: ");
+            decimal precio = (decimal.TryParse(Console.ReadLine(), out decimal valor)) ? valor : 0;
+            Console.Write("Cantidad: ");
+            int cantidad = (int.TryParse(Console.ReadLine(), out int valor1)) ? valor1 : 0;
+            Manejador.ModificarProducto(id, nombre, precio, cantidad);
+            Console.WriteLine("Producto modificado correctamente");
             Console.ReadLine();
         }
         public void MostrarEliminar()
         {
             Console.Clear();
-            Console.WriteLine("Opcion Eliminar Seleccionada");
+            Console.WriteLine("Eliminar Producto");
+            Console.WriteLine("=================");
+            int id = PedirValorentero("ID del producto");
+            Producto? producto = Manejador.BuscarptoductoPorId(id);
+            if (producto is null)
+            {
+                Console.WriteLine("Producto no encontrado");
+                return;
+            }
+            Console.WriteLine(producto.ToString());
+            Console.WriteLine("Deseas eliminar el producto?");
+            string respuesta = Console.ReadLine()?.Trim()?? "n";
+            if (respuesta.Equals("s", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Operacion Cancelada. Presione cualquier tecla para continuar...");
+                return;
+            }
+            Manejador.EliminarProducto(id);
+            Console.WriteLine("Producto eliminado correctamente");
             Console.ReadLine();
         }
     }
